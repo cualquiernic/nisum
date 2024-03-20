@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService{
 			user.setTokenJWT(userOld.getTokenJWT());
 			user.setActivo(activo);
 			ur.save(user);
-			mdto.setTokenJWT(userOld.getTokenJWT());
+			mdto.setTokenJWT("");
 			return mdto;
 		}else {
 			return new MensajeDTO(Constantes.RESPUESTA_REST_FAIL, "No se pudo modificar el usuario");
