@@ -1,5 +1,7 @@
 package com.nisum.services;
 
+import java.util.List;
+
 import com.nisums.dto.MensajeDTO;
 import com.nisums.dto.UserDTO;
 
@@ -26,5 +28,21 @@ public interface UserService {
 	 * @return
 	 */
 	public UserDTO getByEmail(String email);
+	
+	/**
+	 * 
+	 * @param userDTO
+	 * @return
+	 */
+	public MensajeDTO delete(UserDTO userDTO) ;
+	/**
+	 * 
+	 * @return
+	 */
+	public List<UserDTO> getAll();
+		
+	
+		
+	
 
 }

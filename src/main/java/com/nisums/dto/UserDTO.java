@@ -15,6 +15,7 @@ public class UserDTO {
 	private String creationDate;
 	private String modificationDate;
 	private String tokenJWT;
+	private Boolean activo;
 	private List<PhoneDTO> phones;
 	
 	public UserDTO() {
@@ -65,7 +66,14 @@ public class UserDTO {
 		this.tokenJWT = tokenJWT;
 	}
 	
-	
+	public Boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
 	public List<PhoneDTO> getPhones() {
 		return phones;
 	}

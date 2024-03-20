@@ -1,5 +1,6 @@
 package com.nisum.components;
 
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -72,7 +73,7 @@ public class JWTComponent {
 
 				return tokenDTO;
 			}
-			String token = getJWTToken(u.getId());
+			String token = getJWTToken(u.getEmail());
 			tokenDTO.setToken(token);	
 			tokenDTO.setDescripcion("Token Generado exitisamente");
 			tokenDTO.setEstado(Constantes.RESPUESTA_REST_OK);
@@ -106,7 +107,7 @@ public class JWTComponent {
 	}
 	
 	private Claims validateClaimsToken(String jwtToken) {
-		return Jwts.parser().setSigningKey(Constantes.SECRET_TOKEN.getBytes()).parseClaimsJws(jwtToken).getBody();
+		return Jwts.parser().setSigningKey(Constantes.SECRET_TOKEN.getBytes(Charset.forName("UTF-8"))).parseClaimsJws(jwtToken).getBody();
 	}	
 	
 	/**
@@ -131,7 +132,7 @@ public class JWTComponent {
 				.setIssuedAt(fechaCreacion)
 				.setExpiration(fechaExpiracion)
 				.signWith(SignatureAlgorithm.HS512,
-						Constantes.SECRET_TOKEN.getBytes()).compact();
+						Constantes.SECRET_TOKEN.getBytes(Charset.forName("UTF-8"))).compact();
 
 		return token;
 	}

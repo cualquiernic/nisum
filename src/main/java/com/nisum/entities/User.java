@@ -30,6 +30,7 @@ public class User implements Serializable{
 	private Timestamp creationDate;
 	private Timestamp modificationDate;
 	private String tokenJWT;
+	private Boolean activo;
 	private List<Phone> phones;
 	@Id
 	public String getId() {
@@ -79,6 +80,13 @@ public class User implements Serializable{
 	}
 	public void setTokenJWT(String tokenJWT) {
 		this.tokenJWT = tokenJWT;
+	}
+	@Column(name = "activo", nullable = false)
+	public Boolean isActivo() {
+		return activo;
+	}
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	public List<Phone> getPhones() {

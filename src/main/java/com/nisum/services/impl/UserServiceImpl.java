@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService{
 			user.setTokenJWT(jwtc.generateTokenOnCreateUser(user.getId()));
 			user.setCreationDate(Utilidades.getCurrenDate());
 			user.setModificationDate(user.getCreationDate());
+			user.setActivo(true);
 			ur.save(user);
 			mdto.setTokenJWT(user.getTokenJWT());
 			return mdto;
@@ -72,11 +73,17 @@ public class UserServiceImpl implements UserService{
 			return new MensajeDTO(Constantes.RESPUESTA_REST_FAIL, "Usuario no existe");
 		}
 		User user = converToEntity(userDTO);
+		Boolean activo = userOld.isActivo();
+		if (userDTO.isActivo() != null) {
+			activo = userDTO.isActivo();
+		}
 		if (user != null) {
-			pr.deletePhoneByIdUser(userDTO.getId());
+			user.setId(userOld.getId());
+			pr.deletePhoneByIdUser(userOld.getId());
 			user.setCreationDate(userOld.getCreationDate());
 			user.setModificationDate(Utilidades.getCurrenDate());
 			user.setTokenJWT(userOld.getTokenJWT());
+			user.setActivo(activo);
 			ur.save(user);
 			mdto.setTokenJWT(userOld.getTokenJWT());
 			return mdto;
@@ -100,6 +107,38 @@ public class UserServiceImpl implements UserService{
 			return null;
 		}
 	}
+	
+	@Override
+	public MensajeDTO delete(UserDTO userDTO) {
+		try {
+		User userOld = ur.getByEmail(userDTO.getEmail());
+		if (userOld == null) {
+			return new MensajeDTO(Constantes.RESPUESTA_REST_FAIL, "No existe el email del usuario");
+		}
+		ur.delete(userOld);
+		return new MensajeDTO(Constantes.RESPUESTA_REST_OK, "Usuario eliminado con exito");
+		}catch(Exception e) {
+			logger.error("No se puede eliminar el usuario", e);
+			return new MensajeDTO(Constantes.RESPUESTA_REST_FAIL, "No se pudo eliminar el usuario");
+		}
+	}
+	
+	@Override
+	public List<UserDTO> getAll(){
+		List<UserDTO> lud = new ArrayList<>();
+		try {
+			List<User> lu = ur.findAll();
+			for (int i=0; i < lu.size(); i++) {
+				UserDTO ud = converToDTO(lu.get(i));
+				lud.add(ud);
+			}
+		}catch(Exception e) {
+			logger.error("No se puede obtener todos los usuarios", e);
+		}
+		return lud;
+	}
+
+
 
 	/**
 	 * 
@@ -138,6 +177,7 @@ public class UserServiceImpl implements UserService{
 			udto.setPassword(user.getPassword());
 			udto.setId(user.getId());
 			udto.setTokenJWT(user.getTokenJWT());
+			udto.setActivo(user.isActivo());
 			List<PhoneDTO> lpdto = new ArrayList<>();
 			for (int i = 0; i < user.getPhones().size(); i++) {
 				lpdto.add(converToPhoneDTO(user.getPhones().get(i)));
@@ -209,5 +249,6 @@ public class UserServiceImpl implements UserService{
 		return p;
 	}
 
+	
 	
 }
